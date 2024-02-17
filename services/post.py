@@ -2,6 +2,7 @@ import json
 from services.db import DB
 from services.valid import *
 from services.auth import Auth
+from services.utils import timeDiff
 
 db = DB()
 auth = Auth()
@@ -87,7 +88,7 @@ class Post:
             "content": postResult[3],
             "tags": json.loads(postResult[4]),
             "give": postResult[5],
-            "created_at": postResult[6],
+            "created_at": timeDiff(postResult[6]),
         }
 
     def readAll(self):
@@ -124,7 +125,7 @@ class Post:
                     # "content": post[3],
                     "tags": json.loads(post[4]),
                     "give": post[5],
-                    "created_at": post[6],
+                    "created_at": timeDiff(post[6]),
                 }
             )
 
@@ -175,7 +176,7 @@ class Post:
                     # "content": post[3],
                     "tags": json.loads(post[4]),
                     "give": post[5],
-                    "created_at": post[6],
+                    "created_at": timeDiff(post[6]),
                 }
             )
 
