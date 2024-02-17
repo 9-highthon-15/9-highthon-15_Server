@@ -1,5 +1,8 @@
 import re
 from region import regionList
+from classification.classifier import Classifier
+
+classifier = Classifier("beomi/KcELECTRA-base", 2, "cpu")
 
 
 # Auth
@@ -62,8 +65,12 @@ def regionValidator(region):
 def writeValidator(title, content, tags, give):
     if not title:
         return [False, "title", "제목을 입력해주세요."]
+    if classifier.predict(title):
+        return [False, "content", "제목에 욕설 및 비속어가 감지되었습니다."]
     if not content:
         return [False, "content", "내용을 입력해주세요."]
+    if classifier.predict(content):
+        return [False, "content", "내용에 욕설 및 비속어가 감지되었습니다."]
     if not tags:
         return [False, "tags", "태그를 입력해주세요."]
     if give not in [True, False]:
