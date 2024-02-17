@@ -168,16 +168,13 @@ class ReadAll(Resource):
 class Search(Resource):
     @searchSpace.doc(responses={200: "Success, Post Data Return"})
     @searchSpace.doc(responses={400: "Bad request"})
-    @searchSpace.expect(
-        searchSpace.model(
-            "Search",
-            strict=True,
-            model=searchModel,
-        ),
-        validate=True,
-    )
-    def post(self):
-        result = post.search(request.json)
+    @searchSpace.doc(params={"keyword": "검색 키워드"})
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("keyword", type=str, required=True)
+        args = parser.parse_args()
+
+        result = post.search(args)
         if result["result"]:
             return result
         else:
