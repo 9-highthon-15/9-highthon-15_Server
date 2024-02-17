@@ -114,3 +114,38 @@ class Auth:
 
     def passwordCheck(self, password, hashedPassword):
         return bcrypt.checkpw(password.encode("utf-8"), hashedPassword.encode("utf-8"))
+
+    def userCheck(self, token):
+        try:
+            payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            return {
+                "result": False,
+                "code": "EXPIRED_SIGNATURE",
+                "message": "ExpiredSignatureError",
+            }
+        except jwt.InvalidTokenError:
+            return {
+                "result": False,
+                "code": "INVALID_TOKEN",
+                "message": "InvalidTokenError",
+            }
+        except:
+            return {
+                "result": False,
+                "code": "UNKNOWN_TOKEN_ERROR",
+                "message": "Unknown Token Error",
+            }
+
+        query = """
+            SELECT uuid FROM user WHERE uuid = ?
+        """
+        result = db.query(query, (payload["uuid"],))
+        if not result:
+            return {
+                "result": False,
+                "code": "INVALID_UUID",
+                "message": "Invalid UUID",
+            }
+
+        return {"result": True, "code": "USER_VALID", "message": payload["uuid"]}

@@ -12,3 +12,9 @@ loginModel = {
     "email": fields.String(required=True),
     "password": fields.String(required=True),
 }
+
+writeModel = {
+    "title": fields.String(required=True),
+    "content": fields.String(required=True),
+    "tags": fields.List(required=True, cls_or_instance=fields.String),
+}

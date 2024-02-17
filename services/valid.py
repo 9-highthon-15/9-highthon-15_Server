@@ -2,6 +2,7 @@ import re
 from region import regionList
 
 
+# Auth
 def signUpValidator(email, password, nickname, phone, region):
     if not emailValidator(email):
         return [False, "email", "이메일 형식을 확인해주세요."]
@@ -55,3 +56,12 @@ def regionValidator(region):
     if region not in regionList:
         return False
     return True
+
+
+# Post
+def writeValidator(title, content, tags):
+    if not title:
+        return [False, "title", "제목을 입력해주세요."]
+    if not content:
+        return [False, "content", "내용을 입력해주세요."]
+    return [True, None, None]

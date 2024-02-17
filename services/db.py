@@ -39,6 +39,7 @@ class DB:
                     uuid TEXT NOT NULL,
                     title TEXT NOT NULL,
                     content TEXT NOT NULL,
+                    tags TEXT NOT NULL,
                     FOREIGN KEY(uuid) REFERENCES user(uuid)
                 )
                 """
