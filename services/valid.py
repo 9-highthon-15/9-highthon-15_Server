@@ -59,7 +59,7 @@ def regionValidator(region):
 
 
 # Post
-def writeValidator(title, content, tags):
+def writeValidator(title, content, tags, give):
     if not title:
         return [False, "title", "제목을 입력해주세요."]
     if not content:

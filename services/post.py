@@ -17,7 +17,9 @@ class Post:
             return uuid
         uuid = uuid["message"]
 
-        validResult = writeValidator(data["title"], data["content"], data["tags"])
+        validResult = writeValidator(
+            data["title"], data["content"], data["tags"], data["give"]
+        )
         if validResult[0] is False:
             return {
                 "result": False,
@@ -28,15 +30,15 @@ class Post:
         tags = json.dumps(data["tags"])
 
         query = """
-            INSERT INTO post (uuid, title, content, tags)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO post (uuid, title, content, tags, give)
+            VALUES (?, ?, ?, ?, ?)
         """
-        db.execute(query, (uuid, data["title"], data["content"], tags))
+        db.execute(query, (uuid, data["title"], data["content"], tags, data["give"]))
 
         query = """
-            SELECT id FROM post WHERE uuid = ? AND title = ? AND content = ? AND tags = ?
+            SELECT id FROM post WHERE uuid = ? ORDER BY id DESC
         """
-        result = db.query(query, (uuid, data["title"], data["content"], tags))
+        result = db.query(query, (uuid,))
 
         if not result:
             return {

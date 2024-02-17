@@ -90,7 +90,14 @@ class Write(Resource):
         validate=True,
     )
     def post(self):
-        result = post.write(request.json, request.headers.get("Authorization"))
+        token = request.headers.get("Authorization")
+        if not token:
+            return {
+                "result": False,
+                "code": "UNAUTHORIZED",
+                "message": "Unauthorized",
+            }, 401
+        result = post.write(request.json, token)
         if result["result"]:
             return result
         else:

@@ -40,6 +40,7 @@ class DB:
                     title TEXT NOT NULL,
                     content TEXT NOT NULL,
                     tags TEXT NOT NULL,
+                    give BOOLEAN NOT NULL,
                     FOREIGN KEY(uuid) REFERENCES user(uuid)
                 )
                 """

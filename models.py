@@ -17,4 +17,5 @@ writeModel = {
     "title": fields.String(required=True),
     "content": fields.String(required=True),
     "tags": fields.List(required=True, cls_or_instance=fields.String),
+    "give": fields.Boolean(required=True),
 }
