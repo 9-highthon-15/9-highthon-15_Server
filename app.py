@@ -1,5 +1,8 @@
+import werkzeug
 from flask import Flask, request
+from werkzeug.utils import secure_filename
 from flask_restx import Api, Resource, reqparse, fields
+
 from models import *
 from services.auth import Auth
 from services.post import Post
@@ -69,6 +72,38 @@ class SignIn(Resource):
     )
     def post(self):
         result = auth.login(request.json)
+        if result["result"]:
+            return result
+        else:
+            return result, 400
+
+
+@basicSpace.route("/saveImage")
+class SaveImage(Resource):
+    @basicSpace.doc(security="Bearer Auth")
+    @basicSpace.doc(responses={200: "Success, No Return"})
+    @basicSpace.doc(responses={400: "Bad request"})
+    @basicSpace.doc(responses={401: "Unauthorized"})
+    def post(self):
+        token = request.headers.get("Authorization")
+        if not token:
+            return {
+                "result": False,
+                "code": "UNAUTHORIZED",
+                "message": "Unauthorized",
+            }, 401
+
+        parser = reqparse.RequestParser()
+        parser.add_argument(
+            "file",
+            type=werkzeug.datastructures.FileStorage,
+            required=True,
+            location="files",
+        )
+        args = parser.parse_args()
+
+        result = auth.saveImage(token, args["file"])
+
         if result["result"]:
             return result
         else:

@@ -4,6 +4,7 @@ import bcrypt
 from services.db import DB
 from services.valid import *
 from services.config import JWT_SECRET
+from services.upload import uploadImage
 
 db = DB()
 
@@ -149,3 +150,23 @@ class Auth:
             }
 
         return {"result": True, "code": "USER_VALID", "message": payload["uuid"]}
+
+    def saveImage(self, token, image):
+        userCheckResult = self.userCheck(token)
+        if not userCheckResult["result"]:
+            return userCheckResult
+
+        uploadResult = uploadImage(image, f"{userCheckResult['message']}.png")
+        if not uploadResult["result"]:
+            return uploadResult
+
+        query = """
+            UPDATE user SET image = ? WHERE uuid = ?
+        """
+        db.execute(query, (uploadResult["message"], userCheckResult["message"]))
+
+        return {
+            "result": True,
+            "code": "IMAGE_SAVE_SUCCESS",
+            "message": "Image Save Success",
+        }
