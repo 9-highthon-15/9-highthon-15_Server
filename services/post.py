@@ -121,7 +121,58 @@ class Post:
                     "author": userResult[0],
                     "authorImage": userResult[1],
                     "title": post[2],
-                    "content": post[3],
+                    # "content": post[3],
+                    "tags": json.loads(post[4]),
+                    "give": post[5],
+                    "created_at": post[6],
+                }
+            )
+
+        return {
+            "result": True,
+            "posts": postResult,
+        }
+
+    def search(self, data):
+        keyword = data["keyword"]
+        query = """
+            SELECT * FROM post WHERE title LIKE ? OR tags LIKE ? ORDER BY id DESC
+        """
+        result = db.query(
+            query,
+            (
+                f"%{keyword}%",
+                f"%{keyword}%",
+            ),
+        )
+        if not result:
+            return {
+                "result": False,
+                "code": "POST_NOT_EXIST",
+                "message": "Post Not Exist",
+            }
+
+        postResult = []
+        for post in result:
+            query = """
+                SELECT nickname, image FROM user WHERE uuid = ?
+            """
+            userResult = db.query(query, (post[1],))
+            if not userResult:
+                return {
+                    "result": False,
+                    "code": "SEARCH_ERROR_USER_NOT_EXIST",
+                    "message": "Search Error - User Not Exist",
+                }
+            userResult = list(userResult[0])
+
+            postResult.append(
+                {
+                    "id": post[0],
+                    "author": userResult[0],
+                    "authorImage": userResult[1],
+                    "title": post[2],
+                    # "content": post[3],
                     "tags": json.loads(post[4]),
                     "give": post[5],
                     "created_at": post[6],

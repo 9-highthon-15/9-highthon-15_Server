@@ -29,6 +29,7 @@ api = Api(
 basicSpace = api.namespace("/", description="기본 API")
 authSpace = api.namespace("auth", description="인증 API")
 postSpace = api.namespace("post", description="게시글 API")
+searchSpace = api.namespace("search", description="검색 API")
 
 
 @basicSpace.route("/")
@@ -157,6 +158,26 @@ class ReadAll(Resource):
     @postSpace.doc(responses={400: "Bad request"})
     def get(self):
         result = post.readAll()
+        if result["result"]:
+            return result
+        else:
+            return result, 400
+
+
+@searchSpace.route("/search")
+class Search(Resource):
+    @searchSpace.doc(responses={200: "Success, Post Data Return"})
+    @searchSpace.doc(responses={400: "Bad request"})
+    @searchSpace.expect(
+        searchSpace.model(
+            "Search",
+            strict=True,
+            model=searchModel,
+        ),
+        validate=True,
+    )
+    def post(self):
+        result = post.search(request.json)
         if result["result"]:
             return result
         else:
