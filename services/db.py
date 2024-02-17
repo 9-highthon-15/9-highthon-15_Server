@@ -41,6 +41,7 @@ class DB:
                     content TEXT NOT NULL,
                     tags TEXT NOT NULL,
                     give BOOLEAN NOT NULL,
+                    created_at TIMESTAMP DEFAULT (DATETIME('now', 'localtime')),
                     FOREIGN KEY(uuid) REFERENCES user(uuid)
                 )
                 """

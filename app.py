@@ -104,5 +104,29 @@ class Write(Resource):
             return result, 400
 
 
+@postSpace.route("/read/<int:id>")
+class Read(Resource):
+    @postSpace.doc(responses={200: "Success, Post Data Return"})
+    @postSpace.doc(responses={400: "Bad request"})
+    def get(self, id):
+        result = post.read({"id": id})
+        if result["result"]:
+            return result
+        else:
+            return result, 400
+
+
+@postSpace.route("/read")
+class ReadAll(Resource):
+    @postSpace.doc(responses={200: "Success, Post Data Return"})
+    @postSpace.doc(responses={400: "Bad request"})
+    def get(self):
+        result = post.readAll()
+        if result["result"]:
+            return result
+        else:
+            return result, 400
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)

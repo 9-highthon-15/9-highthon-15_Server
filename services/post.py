@@ -51,3 +51,84 @@ class Post:
             "result": True,
             "id": result[0][0],
         }
+
+    def read(self, data):
+        postID = data["id"]
+        query = """
+            SELECT * FROM post WHERE id = ?
+        """
+        result = db.query(query, (postID,))
+        if not result:
+            return {
+                "result": False,
+                "code": "POST_NOT_EXIST",
+                "message": "Post Not Exist",
+            }
+        postResult = result[0]
+
+        query = """
+            SELECT nickname, image FROM user WHERE uuid = ?
+        """
+        userResult = db.query(query, (postResult[1],))
+        if not userResult:
+            return {
+                "result": False,
+                "code": "USER_NOT_EXIST",
+                "message": "User Not Exist",
+            }
+        userResult = list(userResult[0])
+
+        return {
+            "result": True,
+            "id": postResult[0],
+            "author": userResult[0],
+            "authorImage": userResult[1],
+            "title": postResult[2],
+            "content": postResult[3],
+            "tags": json.loads(postResult[4]),
+            "give": postResult[5],
+            "created_at": postResult[6],
+        }
+
+    def readAll(self):
+        query = """
+            SELECT * FROM post ORDER BY id DESC
+        """
+        result = db.query(query)
+        if not result:
+            return {
+                "result": False,
+                "code": "POST_NOT_EXIST",
+                "message": "Post Not Exist",
+            }
+        postResult = []
+        for post in result:
+            query = """
+                SELECT nickname, image FROM user WHERE uuid = ?
+            """
+            userResult = db.query(query, (post[1],))
+            if not userResult:
+                return {
+                    "result": False,
+                    "code": "USER_NOT_EXIST",
+                    "message": "User Not Exist",
+                }
+            userResult = list(userResult[0])
+
+            postResult.append(
+                {
+                    "id": post[0],
+                    "author": userResult[0],
+                    "authorImage": userResult[1],
+                    "title": post[2],
+                    "content": post[3],
+                    "tags": json.loads(post[4]),
+                    "give": post[5],
+                    "created_at": post[6],
+                }
+            )
+
+        return {
+            "result": True,
+            "posts": postResult,
+        }
