@@ -1,4 +1,5 @@
 import re
+from region import regionList
 
 
 def signUpValidator(email, password, nickname, phone, region):
@@ -51,6 +52,6 @@ def passwordValidator(password):
 def regionValidator(region):
     if not region:
         return False
-    if len(region) < 2 or len(region) > 8:
+    if region not in regionList:
         return False
     return True
