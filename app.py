@@ -164,7 +164,7 @@ class ReadAll(Resource):
             return result, 400
 
 
-@searchSpace.route("/search")
+@searchSpace.route("/")
 class Search(Resource):
     @searchSpace.doc(responses={200: "Success, Post Data Return"})
     @searchSpace.doc(responses={400: "Bad request"})
