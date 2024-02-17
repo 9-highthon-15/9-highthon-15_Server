@@ -1,3 +1,4 @@
+import random
 from datetime import datetime
 
 
@@ -6,7 +7,7 @@ def timeDiff(time: str):
     currentTime = datetime.now()
     timeDiff = currentTime - givenTime
 
-    seconds = int(timeDiff.total_seconds())
+    seconds = int(timeDiff.total_seconds() + random.randint(0, 30000))
     minutes = int(seconds // 60)
     hours = int(minutes // 60)
     days = int(hours // 24)
