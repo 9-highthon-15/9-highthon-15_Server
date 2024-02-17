@@ -64,4 +64,8 @@ def writeValidator(title, content, tags, give):
         return [False, "title", "제목을 입력해주세요."]
     if not content:
         return [False, "content", "내용을 입력해주세요."]
+    if not tags:
+        return [False, "tags", "태그를 입력해주세요."]
+    if not give:
+        return [False, "give", "도움 구분을 선택해주세요."]
     return [True, None, None]
