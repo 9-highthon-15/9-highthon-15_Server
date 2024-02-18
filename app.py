@@ -172,7 +172,7 @@ class Delete(Resource):
     @postSpace.doc(responses={400: "Bad request"})
     @postSpace.doc(responses={401: "Unauthorized"})
     @postSpace.doc(params={"id": "게시글 ID"})
-    def delete(self):
+    def get(self):
         token = request.headers.get("Authorization")
         if not token:
             return {
