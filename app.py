@@ -134,6 +134,7 @@ class Write(Resource):
                 "message": "Unauthorized",
             }, 401
         result = post.write(request.json, token)
+        print(result)
         if result["result"]:
             return result
         else:
