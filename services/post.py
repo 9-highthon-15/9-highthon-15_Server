@@ -12,6 +12,38 @@ class Post:
     def __init__(self):
         pass
 
+    def delete(self, data, token):
+        uuid = auth.userCheck(token)
+        if uuid["result"] == False:
+            return uuid
+        uuid = uuid["message"]
+
+        query = """
+            SELECT uuid FROM post WHERE id = ?
+        """
+        result = db.query(query, (data["id"],))
+        if not result:
+            return {
+                "result": False,
+                "code": "POST_NOT_EXIST",
+                "message": "Post Not Exist",
+            }
+        if result[0][0] != uuid:
+            return {
+                "result": False,
+                "code": "POST_DELETE_ERROR",
+                "message": "Post Delete Error",
+            }
+
+        query = """
+            DELETE FROM post WHERE id = ?
+        """
+        db.execute(query, (data["id"],))
+
+        return {
+            "result": True,
+        }
+
     def write(self, data, token):
         uuid = auth.userCheck(token)
         if uuid["result"] == False:

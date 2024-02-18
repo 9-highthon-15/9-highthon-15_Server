@@ -164,6 +164,32 @@ class ReadAll(Resource):
             return result, 400
 
 
+@postSpace.route("/delete")
+class Delete(Resource):
+    @postSpace.doc(security="Bearer Auth")
+    @postSpace.doc(responses={200: "Success, No Return"})
+    @postSpace.doc(responses={400: "Bad request"})
+    @postSpace.doc(responses={401: "Unauthorized"})
+    @postSpace.doc(params={"id": "게시글 ID"})
+    def delete(self):
+        token = request.headers.get("Authorization")
+        if not token:
+            return {
+                "result": False,
+                "code": "UNAUTHORIZED",
+                "message": "Unauthorized",
+            }, 401
+        parser = reqparse.RequestParser()
+        parser.add_argument("id", type=int, required=True)
+        args = parser.parse_args()
+
+        result = post.delete(args, token)
+        if result["result"]:
+            return result
+        else:
+            return result, 400
+
+
 @searchSpace.route("/")
 class Search(Resource):
     @searchSpace.doc(responses={200: "Success, Post Data Return"})
